@@ -240,5 +240,11 @@ public class Main {
 		comboBox.setBounds(146, 280, 233, 30);
 		
 		frame.getContentPane().add(comboBox);
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Artiom\\Desktop\\Files for study and other\\LADA logotypes\\java.png"));
+		lblNewLabel.setBounds(17, 29, 426, 123);
+		frame.getContentPane().add(lblNewLabel);
 	}
+}
+
 }
