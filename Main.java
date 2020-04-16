@@ -1,5 +1,11 @@
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -21,9 +27,55 @@ public class Main {
 	private JTextField textField_firstname;
 	private JTextField textField_id;
 
-	/**
-	 * Launch the application.
-	 */
+	public Connection getConnection() {
+		String dbURL = "jdbc:mysql://localhost:3306/userinfo";
+		String username = "root";
+		String password = "yourpassword";
+		Connection conn;
+		try {
+			conn = DriverManager.getConnection(dbURL, username, password);
+			return conn;
+		} catch (SQLException ex) {
+		    ex.printStackTrace();
+		    return null;
+		}
+	}
+	String query = "SELECT * FROM users";
+	public ArrayList<UserInfo> getUsersList(String query){
+		ArrayList<UserInfo> usersList = new ArrayList<UserInfo>();
+		Connection connection = getConnection();
+		Statement st;
+		ResultSet rs;
+		try {
+			st = connection.createStatement();
+			rs = st.executeQuery(query);
+			UserInfo user;
+			while(rs.next()) {
+				user = new UserInfo(rs.getInt("user_id"),rs.getString("firstname"),rs.getString("lastname"),rs.getString("groupid"),rs.getInt("result"));
+				usersList.add(user);		
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return usersList;
+	}
+	
+	public void DisplayInTable(String OrderQuery) {
+		ArrayList<UserInfo> list = getUsersList(OrderQuery);
+		DefaultTableModel model = new DefaultTableModel();
+		model.setColumnIdentifiers(new Object[] {"user-id","firstname","lastname","groupid","result"});
+		Object[] row = new Object[5];
+		for(int i=0; i < list.size(); i++) {
+			row[0] = list.get(i).getId();
+			row[1] = list.get(i).getFirstName();
+			row[2] = list.get(i).getLastName();
+			row[3] = list.get(i).getGroup();
+			row[4] = list.get(i).getResult();
+			model.addRow(row);
+		}
+		table.setModel(model);
+	}
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -42,6 +94,7 @@ public class Main {
 	 */
 	public Main() {
 		initialize();
+		DisplayInTable(query);
 	}
 
 	/**
