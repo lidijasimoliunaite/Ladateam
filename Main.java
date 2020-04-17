@@ -91,6 +91,7 @@ public class Main {
 			if((st.executeUpdate(sql)) == 1) {
 				DefaultTableModel model = (DefaultTableModel)table.getModel();
 				model.setRowCount(0);
+				DisplayInTable(query);
 				JOptionPane.showMessageDialog(null, "Data "+message+" Succefully");
 			}else {
 				JOptionPane.showMessageDialog(null, "Data not"+message);
